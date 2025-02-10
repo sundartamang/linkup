@@ -53,11 +53,8 @@ public class AuthService {
     }
 
     private void authenticate(String username, String password) throws Exception {
-        System.out.println("username is " + username);
-        System.out.println("Password is "+ password);
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-            System.out.println(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password)));
         } catch (BadCredentialsException e) {
             throw new ApiException("Invalid username or password");
         }

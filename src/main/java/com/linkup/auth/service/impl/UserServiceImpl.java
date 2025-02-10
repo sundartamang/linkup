@@ -30,7 +30,8 @@ public class UserServiceImpl implements UserService {
         this.checkForEmailTaken(usersDTO);
         Users users = this.modelMapper.map(usersDTO, Users.class);
         users.setPassword(encoder.encode(users.getPassword()));
-        return this.modelMapper.map(users, UsersDTO.class);
+        Users savedUser = this.userRepo.save(users);
+        return this.modelMapper.map(savedUser, UsersDTO.class);
     }
 
     @Override
