@@ -1,0 +1,61 @@
+package com.linkup.post.service.impl;
+
+import com.linkup.exceptions.ResourceNotFoundException;
+import com.linkup.post.dto.CategoryDTO;
+import com.linkup.post.entity.Category;
+import com.linkup.post.repository.CategoryRepo;
+import com.linkup.post.service.CategoryService;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class CategoryServiceImpl implements CategoryService {
+
+    @Autowired
+    private CategoryRepo categoryRepo;
+
+    @Autowired
+    private ModelMapper modelMapper;
+
+    @Override
+    public CategoryDTO createCategory(CategoryDTO categoryDTO) {
+        Category category = this.modelMapper.map(categoryDTO, Category.class);
+        Category savedCategory = this.categoryRepo.save(category);
+        return this.modelMapper.map(savedCategory, CategoryDTO.class);
+    }
+
+    @Override
+    public CategoryDTO updateCategory(CategoryDTO categoryDTO, Integer categoryId) {
+        Category category = this.categoryRepo.findById(categoryId).orElseThrow(
+                ()-> new ResourceNotFoundException("Category", " id", categoryId));
+        category.setTitle(categoryDTO.getTitle());
+        category.setDescription(categoryDTO.getDescription());
+        Category updatedCategory = this.categoryRepo.save(category);
+        return this.modelMapper.map(updatedCategory, CategoryDTO.class);
+    }
+
+    @Override
+    public CategoryDTO getCategoryDetails(Integer categoryId) {
+        Category category = this.categoryRepo.findById(categoryId).orElseThrow(
+                ()-> new ResourceNotFoundException("Category", " id", categoryId));
+        return this.modelMapper.map(category, CategoryDTO.class);
+    }
+
+    @Override
+    public List<CategoryDTO> getCategories() {
+        List<Category> categories = this.categoryRepo.findAll();
+        return categories.stream().map(
+                (category)-> this.modelMapper.map(category, CategoryDTO.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteCategory(Integer categoryId) {
+        Category category = this.categoryRepo.findById(categoryId).orElseThrow(
+                ()-> new ResourceNotFoundException("Category", " id", categoryId));
+        this.categoryRepo.delete(category);
+    }
+}
