@@ -1,10 +1,13 @@
 package com.linkup.auth.service.impl;
 
 import com.linkup.auth.dto.UsersDTO;
+import com.linkup.auth.entity.Role;
 import com.linkup.auth.entity.Users;
+import com.linkup.auth.repository.RoleRepo;
 import com.linkup.auth.repository.UserRepo;
 import com.linkup.auth.service.UserService;
 import com.linkup.exceptions.ResourceNotFoundException;
+import com.linkup.utils.AppConstant;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,6 +26,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private RoleRepo roleRepo;
+
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @Override
@@ -30,6 +36,10 @@ public class UserServiceImpl implements UserService {
         this.checkForEmailTaken(usersDTO);
         Users users = this.modelMapper.map(usersDTO, Users.class);
         users.setPassword(encoder.encode(users.getPassword()));
+
+        Role role = this.roleRepo.findById(AppConstant.NORMAL_USER).get();
+        users.getRoles().add(role);
+
         Users savedUser = this.userRepo.save(users);
         return this.modelMapper.map(savedUser, UsersDTO.class);
     }

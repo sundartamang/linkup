@@ -2,12 +2,16 @@ package com.linkup.auth.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.linkup.auth.entity.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @NoArgsConstructor
 @Getter
@@ -27,6 +31,13 @@ public class UsersDTO {
     @NotBlank(message = "Password can not be blank")
     @Size(min = 4, max = 13, message = "Password must be min of 3 characters and max of 13 characters !")
     private String password;
+
+    private Set<Role> roles = new HashSet<>();
+
+    @JsonIgnore
+    public Integer getId(){
+        return this.id;
+    }
 
     @JsonIgnore
     public String getPassword() {
