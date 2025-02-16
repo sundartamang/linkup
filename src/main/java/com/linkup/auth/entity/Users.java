@@ -1,5 +1,6 @@
 package com.linkup.auth.entity;
 
+import com.linkup.post.entity.Post;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,6 +26,9 @@ public class Users implements UserDetails {
     private String email;
     @Column(nullable = false)
     private String password;
+
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
+    private List<Post> posts = new ArrayList<>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
