@@ -48,7 +48,11 @@ public class PostServiceImpl implements PostService {
         Post post = this.modelMapper.map(postDTO, Post.class);
         post.setUsers(user);
         post.setCategory(category);
-        post.setImageName("default.png");
+        if(postDTO.getImageName() != null){
+            post.setImageName(postDTO.getImageName());
+        }else{
+            post.setImageName("default.png");
+        }
         post.setAddedDate(new Date());
         Post newPost = this.postRepo.save(post);
         return this.modelMapper.map(newPost, PostDTO.class);

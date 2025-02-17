@@ -1,6 +1,5 @@
 package com.linkup.auth.service;
 
-import com.linkup.auth.entity.Users;
 import com.linkup.auth.repository.UserRepo;
 import com.linkup.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,3 +20,4 @@ public class MyUserDetailsService implements UserDetailsService {
                 () -> new ResourceNotFoundException("User", "email", username));
     }
 }
+
