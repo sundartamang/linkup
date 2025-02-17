@@ -82,14 +82,22 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostResponse getPosts(PostRequest postRequest) {
         String sortDir = postRequest.getSortDir();
+        // Use SORT_BY constant to specify the field to sort by (e.g., "postId")
+        String sortBy = AppConstant.SORT_BY;
+
         Sort sort = sortDir.equalsIgnoreCase(AppConstant.SORT_DIR)
-                ? Sort.by(sortDir).ascending() : Sort.by(sortDir).descending();
+                ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+
         Pageable pageable = PageRequest.of(
                 postRequest.getPageNumber(), postRequest.getPageSize(), sort);
+
         Page<Post> pageRequest = this.postRepo.findAll(pageable);
+
         List<PostDTO> postDTOS = pageRequest.getContent()
-                .stream().map((post)-> this.modelMapper.map(post, PostDTO.class))
+                .stream()
+                .map((post) -> this.modelMapper.map(post, PostDTO.class))
                 .collect(Collectors.toList());
+
         return new PostResponse(
                 postDTOS,
                 pageRequest.getNumber(),

@@ -62,7 +62,7 @@ public class PostController {
     }
 
     @PostMapping("/list")
-    public ResponseEntity<PostResponse> getPosts(@Valid PostRequest postRequest){
+    public ResponseEntity<PostResponse> getPosts(@Valid @RequestBody PostRequest postRequest){
         PostResponse postResponse = this.postService.getPosts(postRequest);
         return new ResponseEntity<PostResponse>(postResponse, HttpStatus.OK);
     }

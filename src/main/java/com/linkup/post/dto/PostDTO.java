@@ -1,5 +1,6 @@
 package com.linkup.post.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -22,4 +23,5 @@ public class PostDTO {
     private Date addedDate;
     private Integer userId;
     private Integer categoryId;
+
 }
