@@ -15,11 +15,13 @@ import java.util.stream.Collectors;
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
-    @Autowired
-    private CategoryRepo categoryRepo;
+    private final CategoryRepo categoryRepo;
+    private final ModelMapper modelMapper;
 
-    @Autowired
-    private ModelMapper modelMapper;
+    public CategoryServiceImpl(CategoryRepo categoryRepo, ModelMapper modelMapper) {
+        this.categoryRepo = categoryRepo;
+        this.modelMapper = modelMapper;
+    }
 
     @Override
     public CategoryDTO createCategory(CategoryDTO categoryDTO) {

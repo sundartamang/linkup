@@ -4,7 +4,6 @@ import com.linkup.auth.entity.Role;
 import com.linkup.auth.repository.RoleRepo;
 import com.linkup.utils.AppConstant;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,8 +14,11 @@ import java.util.List;
 @SpringBootApplication
 public class LinkUpApplication implements CommandLineRunner {
 
-	@Autowired
-	private RoleRepo roleRepo;
+	private final RoleRepo roleRepo;
+
+	public LinkUpApplication(RoleRepo roleRepo) {
+		this.roleRepo = roleRepo;
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(LinkUpApplication.class, args);

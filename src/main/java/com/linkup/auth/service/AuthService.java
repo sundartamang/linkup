@@ -8,7 +8,6 @@ import com.linkup.auth.repository.UserRepo;
 import com.linkup.exceptions.ApiException;
 import org.springframework.stereotype.Service;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,22 +19,26 @@ import java.util.Optional;
 @Service
 public class AuthService {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
+    private final UserDetailsService userDetailsService;
+    private final JwtTokenService jwtTokenService;
+    private final UserRepo userRepo;
+    private final ModelMapper modelMapper;
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+    public AuthService(
+            AuthenticationManager authenticationManager,
+            UserDetailsService userDetailsService,
+            JwtTokenService jwtTokenService,
+            UserRepo userRepo,
+            ModelMapper modelMapper) {
+        this.authenticationManager = authenticationManager;
+        this.userDetailsService = userDetailsService;
+        this.jwtTokenService = jwtTokenService;
+        this.userRepo = userRepo;
+        this.modelMapper = modelMapper;
+    }
 
-    @Autowired
-    private JwtTokenService jwtTokenService;
-
-    @Autowired
-    private UserRepo userRepo;
-
-    @Autowired
-    private ModelMapper modelMapper;
-
-    public JwtAuthResponse authenticateUser(JwtAuthRequest jwtAuthRequest) throws Exception {
+    public JwtAuthResponse authenticateUser(JwtAuthRequest jwtAuthRequest) {
 
         this.authenticate(jwtAuthRequest.getUsername(), jwtAuthRequest.getPassword());
 
@@ -52,7 +55,7 @@ public class AuthService {
         return response;
     }
 
-    private void authenticate(String username, String password) throws Exception {
+    private void authenticate(String username, String password) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (BadCredentialsException e) {

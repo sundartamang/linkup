@@ -8,7 +8,6 @@ import com.linkup.post.service.FileService;
 import com.linkup.post.service.PostService;
 import com.linkup.utils.AppConstant;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,11 +20,13 @@ import java.util.List;
 @RequestMapping("/api/posts/")
 public class PostController {
 
-    @Autowired
-    private PostService postService;
+    private final PostService postService;
+    private final FileService fileService;
 
-    @Autowired
-    private FileService fileService;
+    public PostController(PostService postService, FileService fileService) {
+        this.postService = postService;
+        this.fileService = fileService;
+    }
 
     @PostMapping("/")
     public ResponseEntity<PostDTO> createPost(

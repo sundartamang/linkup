@@ -5,7 +5,6 @@ import com.linkup.auth.payload.JwtAuthRequest;
 import com.linkup.auth.payload.JwtAuthResponse;
 import com.linkup.auth.service.AuthService;
 import com.linkup.auth.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,11 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/auth/")
 public class AuthController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+    private final AuthService authService;
 
-    @Autowired
-    private AuthService authService;
+    public AuthController(UserService userService, AuthService authService) {
+        this.userService = userService;
+        this.authService = authService;
+    }
 
     @PostMapping("/register")
     public ResponseEntity<UsersDTO> registerUser(@RequestBody UsersDTO userDto){

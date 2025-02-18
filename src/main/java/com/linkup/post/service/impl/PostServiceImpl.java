@@ -13,7 +13,6 @@ import com.linkup.post.repository.PostRepo;
 import com.linkup.post.service.PostService;
 import com.linkup.utils.AppConstant;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,17 +26,21 @@ import java.util.stream.Collectors;
 @Service
 public class PostServiceImpl implements PostService {
 
-    @Autowired
-    private PostRepo postRepo;
+    private final PostRepo postRepo;
+    private final UserRepo userRepo;
+    private final CategoryRepo categoryRepo;
+    private final ModelMapper modelMapper;
 
-    @Autowired
-    private UserRepo userRepo;
-
-    @Autowired
-    private CategoryRepo categoryRepo;
-
-    @Autowired
-    private ModelMapper modelMapper;
+    public PostServiceImpl(
+            PostRepo postRepo,
+            UserRepo userRepo,
+            CategoryRepo categoryRepo,
+            ModelMapper modelMapper) {
+        this.postRepo = postRepo;
+        this.userRepo = userRepo;
+        this.categoryRepo = categoryRepo;
+        this.modelMapper = modelMapper;
+    }
 
     @Override
     public PostDTO createPost(PostDTO postDTO) {

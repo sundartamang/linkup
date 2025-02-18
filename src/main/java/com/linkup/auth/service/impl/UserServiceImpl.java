@@ -20,14 +20,15 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserRepo userRepo;
+    private final UserRepo userRepo;
+    private final ModelMapper modelMapper;
+    private final RoleRepo roleRepo;
 
-    @Autowired
-    private ModelMapper modelMapper;
-
-    @Autowired
-    private RoleRepo roleRepo;
+    public UserServiceImpl(UserRepo userRepo, ModelMapper modelMapper, RoleRepo roleRepo) {
+        this.userRepo = userRepo;
+        this.modelMapper = modelMapper;
+        this.roleRepo = roleRepo;
+    }
 
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
