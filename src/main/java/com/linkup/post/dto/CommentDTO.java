@@ -15,5 +15,6 @@ public class CommentDTO {
     @NotBlank(message = "Comment cannot be blank")
     @Size(max = 100, message = "Comment cannot exceed 100 characters!")
     private String comment;
+    private Integer postId;
 }
 
