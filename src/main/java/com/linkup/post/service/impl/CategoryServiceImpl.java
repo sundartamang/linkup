@@ -6,8 +6,9 @@ import com.linkup.post.entity.Category;
 import com.linkup.post.repository.CategoryRepo;
 import com.linkup.post.service.CategoryService;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,6 +18,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepo categoryRepo;
     private final ModelMapper modelMapper;
+    private static final Logger logger = LoggerFactory.getLogger(CategoryServiceImpl.class);
 
     public CategoryServiceImpl(CategoryRepo categoryRepo, ModelMapper modelMapper) {
         this.categoryRepo = categoryRepo;
@@ -27,6 +29,7 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDTO createCategory(CategoryDTO categoryDTO) {
         Category category = this.modelMapper.map(categoryDTO, Category.class);
         Category savedCategory = this.categoryRepo.save(category);
+        logger.info("{} : category created ", categoryDTO.getTitle());
         return this.modelMapper.map(savedCategory, CategoryDTO.class);
     }
 
@@ -37,6 +40,7 @@ public class CategoryServiceImpl implements CategoryService {
         category.setTitle(categoryDTO.getTitle());
         category.setDescription(categoryDTO.getDescription());
         Category updatedCategory = this.categoryRepo.save(category);
+        logger.info("{} : category updated ", categoryDTO.getId());
         return this.modelMapper.map(updatedCategory, CategoryDTO.class);
     }
 
@@ -58,6 +62,7 @@ public class CategoryServiceImpl implements CategoryService {
     public void deleteCategory(Integer categoryId) {
         Category category = this.categoryRepo.findById(categoryId).orElseThrow(
                 ()-> new ResourceNotFoundException("Category", " id", categoryId));
+        logger.info("Category with: {} deleted successfully", categoryId);
         this.categoryRepo.delete(category);
     }
 }

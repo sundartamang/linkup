@@ -9,14 +9,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class CategoryDTO {
+public class CommentDTO {
     private Integer id;
 
-    @NotBlank(message = "Title cannot be blank")
-    private String title;
-
-    @Size(max = 100, message = "Description must be at most 100 characters!")
-    private String description;
-
-    private Integer postId;
+    @NotBlank(message = "Comment cannot be blank")
+    @Size(max = 100, message = "Comment cannot exceed 100 characters!")
+    private String comment;
 }
+

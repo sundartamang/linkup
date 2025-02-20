@@ -9,13 +9,14 @@ import com.linkup.auth.service.UserService;
 import com.linkup.exceptions.ResourceNotFoundException;
 import com.linkup.utils.AppConstant;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -23,6 +24,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepo userRepo;
     private final ModelMapper modelMapper;
     private final RoleRepo roleRepo;
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     public UserServiceImpl(UserRepo userRepo, ModelMapper modelMapper, RoleRepo roleRepo) {
         this.userRepo = userRepo;
@@ -42,6 +44,7 @@ public class UserServiceImpl implements UserService {
         users.getRoles().add(role);
 
         Users savedUser = this.userRepo.save(users);
+        logger.info("User registered with email: {}", usersDTO.getEmail());
         return this.modelMapper.map(savedUser, UsersDTO.class);
     }
 
@@ -50,6 +53,7 @@ public class UserServiceImpl implements UserService {
         this.checkForEmailTaken(usersDTO);
         Users users = this.modelMapper.map(usersDTO, Users.class);
         Users savedUser = this.userRepo.save(users);
+        logger.info("User created with email: {}", usersDTO.getEmail());
         return this.modelMapper.map(savedUser, UsersDTO.class);
     }
 
@@ -60,6 +64,7 @@ public class UserServiceImpl implements UserService {
         users.setName(usersDTO.getName());
         users.setEmail(usersDTO.getEmail());
         users.setPassword(usersDTO.getPassword());
+        logger.info("User updated with ID: {}", userId);
         return this.modelMapper.map(users, UsersDTO.class);
     }
 
@@ -81,6 +86,7 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Integer userId) {
         Users users = this.userRepo.findById(userId).orElseThrow(
                 ()-> new ResourceNotFoundException("User ", " id ", userId));
+        logger.info("User deleted with ID: {}", userId);
         this.userRepo.delete(users);
     }
 
