@@ -41,9 +41,11 @@ public class Users implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles.stream().map(
-                (role)-> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+        return this.roles.stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName())) // Add ROLE_ prefix
+                .collect(Collectors.toList());
     }
+
 
     @Override
     public String getUsername() {

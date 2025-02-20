@@ -3,12 +3,11 @@ package com.linkup.auth.service;
 import io.jsonwebtoken.io.Decoders;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import io.jsonwebtoken.Claims;
@@ -43,6 +42,12 @@ public class JwtTokenService {
         return getClaimFromToken(token, Claims::getSubject);
     }
 
+    //get roles from token
+    public List<String> getRolesFromToken(String token) {
+        Claims claims = getAllClaimsFromToken(token);
+        return claims.get("roles", List.class);
+    }
+
     // Retrieve expiration date from JWT token
     public Date getExpirationDateFromToken(String token) {
         return getClaimFromToken(token, Claims::getExpiration);
@@ -56,8 +61,11 @@ public class JwtTokenService {
     // Generate token for user
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
+        Collection<? extends GrantedAuthority> roles = userDetails.getAuthorities();
+        claims.put("roles", roles.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
         return generateToken(claims, userDetails.getUsername());
     }
+
 
     // Validate token
     public Boolean validateToken(String token, UserDetails userDetails) {
@@ -68,12 +76,10 @@ public class JwtTokenService {
     // Generate token logic
     private String generateToken(Map<String, Object> claims, String subject) {
         return Jwts.builder()
-                .claims()
-                .add(claims)
-                .subject(subject)
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
-                .and()
+                .setClaims(claims)
+                .setSubject(subject)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
                 .signWith(getKey())
                 .compact();
     }
